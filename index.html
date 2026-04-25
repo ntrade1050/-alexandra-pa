@@ -99,14 +99,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div style="font-size:15px;font-weight:600;color:#4a90d9;">Tap to begin</div>
     <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;">Alexandra will call you shortly</div>
   </div>
-  <div id="scan-running" style="display:none;">
-  <div class="scan-status">Alexandra is reviewing your communications...</div>
-  <div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
+  <div class="scan-status" id="scan-status-txt" style="display:none;">Alexandra is reviewing your communications...</div>
+  <div class="progress-wrap" id="prog-wrap" style="display:none;"><div class="progress-bar" id="prog"></div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(37,211,102,0.15);">📱</div><div style="flex:1;"><div class="scan-name">WhatsApp Business</div><div class="scan-detail" id="wa-d">Scanning threads...</div></div><div class="scan-check" id="wa-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(74,144,217,0.15);">✉️</div><div style="flex:1;"><div class="scan-name">Email</div><div class="scan-detail" id="em-d">Waiting...</div></div><div class="scan-check" id="em-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(147,51,234,0.15);">💬</div><div style="flex:1;"><div class="scan-name">SMS</div><div class="scan-detail" id="sm-d">Waiting...</div></div><div class="scan-check" id="sm-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(243,156,18,0.15);">📅</div><div style="flex:1;"><div class="scan-name">Calendar</div><div class="scan-detail" id="cal-d">Waiting...</div></div><div class="scan-check" id="cal-ok">✓</div></div>
-  </div>
 </div>
 
 <div id="ring-screen" class="screen">
