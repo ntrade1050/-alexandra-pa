@@ -3,7 +3,7 @@ exports.handler = async function(event, context) {
     return {statusCode:405, body:'Method not allowed'};
   }
 
-  const API_KEY = 'sk_f21629d0814dd1390c96113d733097f9efc227590b7f5ddf';
+  const API_KEY = 'sk_ade9bf17b7d4d1dde09b5b2ef891ee63dbe52ddb4ad5cee7';
   const VOICE_ID = 'uhYnkYTBc711oAY590Ea';
 
   try {
