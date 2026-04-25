@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Alexandra — Your Personal Assistant</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--bg:#0f0f1a;--bg2:#1a1a2e;--accent:#4a90d9;--green:#2ecc71;--red:#e74c3c;--amber:#f39c12;--text:#ffffff;--text2:rgba(255,255,255,0.7);--text3:rgba(255,255,255,0.4);--border:rgba(255,255,255,0.1);--card:rgba(255,255,255,0.06);}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:420px;margin:0 auto;overflow-x:hidden;}
+.screen{display:none;min-height:100vh;flex-direction:column;}
+.screen.active{display:flex;}
+
+#scan-screen{padding:2rem 1.5rem;}
+.user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;color:white;flex-shrink:0;}
+.scan-header{display:flex;align-items:center;gap:12px;margin-bottom:2rem;}
+.scan-greeting{font-size:20px;font-weight:600;}
+.scan-sub{font-size:13px;color:var(--text2);margin-top:2px;}
+.scan-status{font-size:14px;color:var(--text2);margin-bottom:1rem;}
+.progress-wrap{background:rgba(255,255,255,0.1);border-radius:4px;height:3px;margin-bottom:1.5rem;overflow:hidden;}
+.progress-bar{height:100%;background:var(--accent);border-radius:4px;transition:width 0.8s ease;width:0%;}
+.scan-item{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:0.5px solid var(--border);}
+.scan-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.scan-name{font-size:14px;font-weight:500;}
+.scan-detail{font-size:12px;color:var(--text3);margin-top:2px;}
+.scan-check{font-size:16px;color:var(--green);opacity:0;transition:opacity 0.4s;}
+.scan-check.done{opacity:1;}
+
+#ring-screen{background:linear-gradient(180deg,#0d1b35 0%,#0f0f1a 100%);align-items:center;justify-content:space-between;padding:3rem 2rem;}
+.ring-label{font-size:13px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;text-align:center;}
+.ring-name{font-size:28px;font-weight:600;text-align:center;margin-bottom:0.25rem;}
+.ring-role{font-size:14px;color:var(--text2);text-align:center;margin-bottom:2.5rem;}
+.ring-avatar-wrap{position:relative;display:flex;justify-content:center;align-items:center;margin-bottom:2.5rem;width:100%;}
+.ring-pulse{position:absolute;width:160px;height:160px;border-radius:50%;border:1.5px solid rgba(74,144,217,0.4);animation:rpulse 2s ease-out infinite;}
+.ring-pulse2{position:absolute;width:200px;height:200px;border-radius:50%;border:1px solid rgba(74,144,217,0.2);animation:rpulse 2s ease-out infinite 0.6s;}
+@keyframes rpulse{0%{transform:scale(0.85);opacity:1;}100%{transform:scale(1.15);opacity:0;}}
+.ring-controls{display:flex;gap:3rem;justify-content:center;width:100%;}
+.ring-btn{width:70px;height:70px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:28px;}
+.ring-btn.decline{background:var(--red);}
+.ring-btn.answer{background:var(--green);animation:apulse 1.5s ease-in-out infinite;}
+@keyframes apulse{0%,100%{box-shadow:0 0 0 0 rgba(46,204,113,0.4);}50%{box-shadow:0 0 0 14px rgba(46,204,113,0);}}
+.ring-btn-label{font-size:12px;color:var(--text2);text-align:center;margin-top:8px;}
+
+#call-screen{background:linear-gradient(180deg,#0d1b35 0%,#0f0f1a 100%);align-items:center;padding:1.5rem;flex:1;}
+.call-timer{font-size:13px;color:var(--text3);margin-bottom:0.2rem;}
+.call-name{font-size:22px;font-weight:600;margin-bottom:0.1rem;}
+.call-role{font-size:13px;color:var(--text2);margin-bottom:1.25rem;}
+.talk-wrap{position:relative;display:flex;justify-content:center;margin-bottom:1rem;}
+.talk-ring{width:150px;height:150px;border-radius:50%;border:2px solid rgba(74,144,217,0.2);display:flex;align-items:center;justify-content:center;transition:all 0.3s;overflow:hidden;}
+.talk-ring.talking{border-color:rgba(74,144,217,0.9);box-shadow:0 0 0 8px rgba(74,144,217,0.1);animation:tpulse 0.8s ease-in-out infinite;}
+@keyframes tpulse{0%,100%{box-shadow:0 0 0 4px rgba(74,144,217,0.1);}50%{box-shadow:0 0 0 16px rgba(74,144,217,0.05);}}
+.alex-photo{width:150px;height:150px;object-fit:cover;border-radius:50%;}
+.wave-bars{display:flex;align-items:center;justify-content:center;gap:4px;height:28px;margin-bottom:0.75rem;}
+.wave-bar{width:4px;border-radius:3px;background:rgba(74,144,217,0.5);height:4px;}
+.wave-bar.active{animation:wavebar 0.5s ease-in-out infinite;}
+.wave-bar:nth-child(1).active{animation-delay:0s;}
+.wave-bar:nth-child(2).active{animation-delay:0.1s;}
+.wave-bar:nth-child(3).active{animation-delay:0.2s;}
+.wave-bar:nth-child(4).active{animation-delay:0.15s;}
+.wave-bar:nth-child(5).active{animation-delay:0.05s;}
+@keyframes wavebar{0%,100%{height:4px;}50%{height:22px;}}
+.speech-box{background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.12);border-radius:16px;padding:14px 18px;font-size:13px;color:rgba(255,255,255,0.9);line-height:1.6;margin-bottom:1rem;min-height:70px;width:100%;text-align:center;}
+.resp-row{display:flex;gap:8px;width:100%;margin-bottom:0.75rem;}
+.resp-btn{flex:1;padding:10px 4px;border-radius:12px;border:0.5px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.85);font-size:12px;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;}
+.resp-btn:active{background:rgba(255,255,255,0.18);}
+.view-list{width:100%;padding:11px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.15);border-radius:12px;color:rgba(255,255,255,0.7);font-size:13px;cursor:pointer;text-align:center;margin-bottom:0.75rem;}
+.call-ctrls{display:flex;gap:20px;justify-content:center;}
+.ctrl{width:54px;height:54px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:20px;}
+.ctrl.spk{background:rgba(255,255,255,0.15);}
+.ctrl.mic-off{background:rgba(255,255,255,0.15);}
+.ctrl.mic-on{background:rgba(74,144,217,0.4);}
+.ctrl.end{background:var(--red);}
+.mic-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:0.5rem;}
+.status-txt{font-size:12px;color:var(--text3);text-align:center;margin-bottom:0.5rem;min-height:16px;}
+
+#list-screen{background:var(--bg);flex:1;}
+.list-top{background:var(--bg2);padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--border);}
+.back-row{display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0.75rem;}
+.back-arrow{color:var(--accent);font-size:20px;}
+.back-label{color:var(--accent);font-size:14px;}
+.list-heading{font-size:18px;font-weight:600;}
+.list-sub{font-size:12px;color:var(--text2);margin-top:3px;}
+.list-body{padding:1rem 1.5rem;}
+.omission{background:var(--card);border-radius:12px;padding:12px 16px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:1rem;}
+.uncomf{background:rgba(243,156,18,0.1);border:0.5px solid rgba(243,156,18,0.3);border-radius:12px;padding:12px 16px;font-size:13px;color:#f7c948;margin-bottom:1rem;line-height:1.5;}
+.task{background:var(--card);border-radius:14px;padding:1rem 1.25rem;margin-bottom:10px;border-left:3px solid transparent;}
+.task.t1{border-left-color:var(--red);}
+.task.t2{border-left-color:var(--amber);}
+.task.t3{border-left-color:var(--green);}
+.task-title{font-size:14px;font-weight:500;line-height:1.4;}
+.task-src{font-size:11px;color:var(--text3);margin-top:3px;}
+.task-reason{font-size:12px;color:var(--text2);margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border);}
+</style>
+</head>
+<body>
+
+<div id="scan-screen" class="screen active">
+  <div class="scan-header">
+    <div class="user-avatar">ML</div>
+    <div><div class="scan-greeting">Good morning, Maria</div><div class="scan-sub" id="scan-date"></div></div>
+  </div>
+  <div class="scan-status">Alexandra is reviewing your communications...</div>
+  <div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
+  <div class="scan-item"><div class="scan-ico" style="background:rgba(37,211,102,0.15);">📱</div><div style="flex:1;"><div class="scan-name">WhatsApp Business</div><div class="scan-detail" id="wa-d">Scanning threads...</div></div><div class="scan-check" id="wa-ok">✓</div></div>
+  <div class="scan-item"><div class="scan-ico" style="background:rgba(74,144,217,0.15);">✉️</div><div style="flex:1;"><div class="scan-name">Email</div><div class="scan-detail" id="em-d">Waiting...</div></div><div class="scan-check" id="em-ok">✓</div></div>
+  <div class="scan-item"><div class="scan-ico" style="background:rgba(147,51,234,0.15);">💬</div><div style="flex:1;"><div class="scan-name">SMS</div><div class="scan-detail" id="sm-d">Waiting...</div></div><div class="scan-check" id="sm-ok">✓</div></div>
+  <div class="scan-item"><div class="scan-ico" style="background:rgba(243,156,18,0.15);">📅</div><div style="flex:1;"><div class="scan-name">Calendar</div><div class="scan-detail" id="cal-d">Waiting...</div></div><div class="scan-check" id="cal-ok">✓</div></div>
+</div>
+
+<div id="ring-screen" class="screen">
+  <div>
+    <div class="ring-label">Incoming call</div>
+    <div class="ring-name">Alexandra</div>
+    <div class="ring-role">Your Personal Assistant</div>
+  </div>
+  <div class="ring-avatar-wrap">
+    <div class="ring-pulse"></div>
+    <div class="ring-pulse2"></div>
+    <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face"
+         style="width:140px;height:140px;border-radius:50%;object-fit:cover;border:3px solid rgba(74,144,217,0.5);position:relative;z-index:1;"
+         onerror="this.style.display='none';document.getElementById('ring-fallback').style.display='flex';" alt="Alexandra">
+    <div id="ring-fallback" style="display:none;width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);align-items:center;justify-content:center;font-size:48px;position:relative;z-index:1;">👩‍💼</div>
+  </div>
+  <div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:2rem;" id="ring-status">Ringing...</div>
+  <div class="ring-controls">
+    <div style="text-align:center;">
+      <button class="ring-btn decline" onclick="declineCall()">📵</button>
+      <div class="ring-btn-label">Decline</div>
+    </div>
+    <div style="text-align:center;">
+      <button class="ring-btn answer" onclick="answerCall()">📞</button>
+      <div class="ring-btn-label">Answer</div>
+    </div>
+  </div>
+</div>
+
+<div id="call-screen" class="screen">
+  <div class="call-timer" id="call-timer">00:00</div>
+  <div class="call-name">Alexandra</div>
+  <div class="call-role">Personal Assistant</div>
+  <div class="talk-wrap">
+    <div class="talk-ring" id="talk-ring">
+      <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=300&h=300&fit=crop&crop=face"
+           class="alex-photo"
+           onerror="this.style.display='none';document.getElementById('call-fallback').style.display='flex';" alt="Alexandra">
+      <div id="call-fallback" style="display:none;width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);align-items:center;justify-content:center;font-size:56px;">👩‍💼</div>
+    </div>
+  </div>
+  <div class="wave-bars">
+    <div class="wave-bar" id="wb1"></div>
+    <div class="wave-bar" id="wb2"></div>
+    <div class="wave-bar" id="wb3"></div>
+    <div class="wave-bar" id="wb4"></div>
+    <div class="wave-bar" id="wb5"></div>
+  </div>
+  <div class="status-txt" id="status-txt"></div>
+  <div class="speech-box" id="speech-box">Alexandra is ready...</div>
+  <div class="resp-row" id="resp-row" style="display:none;">
+    <div class="resp-btn" onclick="respond('yes')">✓ Yes</div>
+    <div class="resp-btn" onclick="respond('skip')">→ Skip</div>
+    <div class="resp-btn" onclick="respond('done')">✓ Done</div>
+  </div>
+  <div class="view-list" onclick="goList()">View full list →</div>
+  <div class="call-ctrls">
+    <button class="ctrl spk" id="spk-btn" onclick="toggleSpk()">🔊</button>
+    <button class="ctrl mic-off" id="mic-btn" onclick="toggleMic()">🎙️</button>
+    <button class="ctrl end" onclick="endCall()">📵</button>
+  </div>
+  <div class="mic-hint" id="mic-hint">Tap mic to speak · or use buttons</div>
+</div>
+
+<div id="list-screen" class="screen">
+  <div class="list-top">
+    <div class="back-row" onclick="backToCall()"><div class="back-arrow">←</div><div class="back-label">Back to Alexandra</div></div>
+    <div class="list-heading">Today's briefing</div>
+    <div class="list-sub" id="list-date"></div>
+  </div>
+  <div class="list-body">
+    <div class="omission">Checked 12 emails · 4 WhatsApp threads · 3 SMS · 2 calendar events. These 3 matter. Nothing else urgent based on your deadlines and schedule.</div>
+    <div class="uncomf">⚠ You've moved the Henderson contract 4 days in a row.</div>
+    <div class="task t1"><div class="task-title">Draft contract — Henderson case</div><div class="task-src">✉️ Email from Henderson · 07:42 AM</div><div class="task-reason">Due today · Client emailed asking for update this morning</div></div>
+    <div class="task t2"><div class="task-title">File motion to court</div><div class="task-src">📅 Calendar · Deadline 5:00 PM today</div><div class="task-reason">Hard deadline · Cannot be moved · Document ready to sign</div></div>
+    <div class="task t3"><div class="task-title">Call Mrs. Okafor — court date change</div><div class="task-src">💬 WhatsApp · 2 messages · 3 days ago</div><div class="task-reason">2 days overdue · Client waiting on confirmation</div></div>
+  </div>
+</div>
+
+<script>
+var VOICE_ID = 'uhYnkYTBc711oAY590Ea';
+var spkOn = true;
+var isListening = false;
+var callSecs = 0;
+var callTmr = null;
+var curTask = 0;
+var currentAudio = null;
+var audioCtx = null;
+var ringInterval = null;
+
+var tasks = [
+  {speak:"Good morning Maria. I have scanned your emails, WhatsApp, messages and calendar. You have three things that need your attention today. Let me run through them.", isIntro:true},
+  {speak:"First — the Henderson contract draft. It is due today, and Mr Henderson emailed you again this morning asking for an update. This task has been moved four days in a row. I would strongly recommend making this your first priority today.", pushback:"Maria, Henderson has messaged three times and this is due today. You risk losing the client. At minimum, shall I send him a quick acknowledgement to buy you some time?"},
+  {speak:"Second — you need to file the motion to court by five pm today. If it is not filed, the case will be struck off the list. The document is already drafted and just needs your signature. This cannot be moved.", pushback:"Maria, I cannot recommend skipping this. Missing a court filing deadline has serious consequences for your client. The document is ready — it will take five minutes. Please prioritise this."},
+  {speak:"Third — Mrs Okafor has sent two WhatsApp messages about her court date change. She has been waiting three days. A quick call or message would take two minutes.", pushback:"Mrs Okafor has been waiting three days for one piece of information. I would suggest sending her the new date by WhatsApp right now — I can draft that message for you."},
+  {speak:"That is your briefing for today. Henderson contract, court filing, and Mrs Okafor. I will monitor your communications and alert you if anything urgent comes through. Have a productive morning Maria.", isOutro:true}
+];
+
+// Create ringtone using Web Audio API
+function createRingtone() {
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return true;
+  } catch(e) { return false; }
+}
+
+function playRingTone() {
+  if (!audioCtx) return;
+  function ring() {
+    if (!audioCtx) return;
+    var times = [[0, 440], [0.2, 550], [0.4, 0], [0.7, 440], [0.9, 550], [1.1, 0]];
+    times.forEach(function(t) {
+      if (t[1] === 0) return;
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.value = t[1];
+      osc.type = 'sine';
+      gain.gain.setValueAtTime(0, audioCtx.currentTime + t[0]);
+      gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + t[0] + 0.05);
+      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + t[0] + 0.18);
+      osc.start(audioCtx.currentTime + t[0]);
+      osc.stop(audioCtx.currentTime + t[0] + 0.2);
+    });
+  }
+  ring();
+  ringInterval = setInterval(ring, 2500);
+}
+
+function stopRingTone() {
+  if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
+}
+
+function setWave(on) {
+  var bars = document.querySelectorAll('.wave-bar');
+  bars.forEach(function(b) { if(on) b.classList.add('active'); else { b.classList.remove('active'); b.style.height='4px'; } });
+  var ring = document.getElementById('talk-ring');
+  if (ring) { if(on) ring.classList.add('talking'); else ring.classList.remove('talking'); }
+}
+
+function setStatus(txt) {
+  document.getElementById('status-txt').textContent = txt;
+}
+
+async function speakText(text, onEnd) {
+  if (!spkOn) { if(onEnd) setTimeout(onEnd, 500); return; }
+  setWave(true);
+  setStatus('Alexandra is speaking...');
+  try {
+    var resp = await fetch('/.netlify/functions/speak', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({text: text})
+    });
+    if (!resp.ok) throw new Error('Function returned ' + resp.status);
+    var blob = await resp.blob();
+    var url = URL.createObjectURL(blob);
+    if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+    currentAudio = new Audio(url);
+    currentAudio.onended = function() {
+      setWave(false); setStatus('');
+      URL.revokeObjectURL(url);
+      if (onEnd) setTimeout(onEnd, 400);
+    };
+    currentAudio.onerror = function() {
+      setWave(false); setStatus('');
+      console.error('Audio playback error');
+      useFallback(text, onEnd);
+    };
+    await currentAudio.play();
+  } catch(e) {
+    console.error('ElevenLabs error:', e);
+    setWave(false);
+    useFallback(text, onEnd);
+  }
+}
+
+function useFallback(text, onEnd) {
+  setStatus('Speaking...');
+  setWave(true);
+  var synth = window.speechSynthesis;
+  synth.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  u.rate = 0.88; u.pitch = 1.1; u.volume = 1;
+  var voices = synth.getVoices();
+  var v = voices.find(function(v) { return v.lang === 'en-GB' && v.name.toLowerCase().indexOf('female') >= 0; })
+       || voices.find(function(v) { return v.lang === 'en-GB'; })
+       || voices.find(function(v) { return v.lang.startsWith('en'); });
+  if (v) u.voice = v;
+  u.onend = function() { setWave(false); setStatus(''); if(onEnd) setTimeout(onEnd, 400); };
+  u.onerror = function() { setWave(false); setStatus(''); if(onEnd) setTimeout(onEnd, 400); };
+  synth.speak(u);
+}
+
+function showTask(idx) {
+  if (idx >= tasks.length) return;
+  curTask = idx;
+  var t = tasks[idx];
+  document.getElementById('resp-row').style.display = 'none';
+  document.getElementById('speech-box').textContent = t.speak;
+  speakText(t.speak, function() {
+    if (t.isIntro) setTimeout(function() { showTask(1); }, 300);
+    else if (t.isOutro) {}
+    else document.getElementById('resp-row').style.display = 'flex';
+  });
+}
+
+function respond(type) {
+  document.getElementById('resp-row').style.display = 'none';
+  var t = tasks[curTask];
+  if (type === 'skip') {
+    document.getElementById('speech-box').textContent = t.pushback;
+    speakText(t.pushback, function() {
+      var rr = document.getElementById('resp-row');
+      rr.style.display = 'flex';
+      rr.children[0].textContent = '✓ Ok, will do';
+      rr.children[1].textContent = '→ Still skip';
+      rr.children[2].textContent = '✉️ Send message';
+    });
+  } else {
+    var cfm = {'yes':"Noted. Moving on.", 'done':"Perfect, marked as complete.", 'Ok, will do':"Good call.", 'Still skip':"Understood. Removed for today.", 'Send message':"I will send that on your behalf."};
+    var msg = cfm[type] || "Got it.";
+    document.getElementById('speech-box').textContent = msg;
+    speakText(msg, function() {
+      var rr = document.getElementById('resp-row');
+      rr.children[0].textContent = '✓ Yes';
+      rr.children[1].textContent = '→ Skip';
+      rr.children[2].textContent = '✓ Done';
+      setTimeout(function() { showTask(curTask + 1); }, 300);
+    });
+  }
+}
+
+function toggleSpk() {
+  spkOn = !spkOn;
+  document.getElementById('spk-btn').textContent = spkOn ? '🔊' : '🔇';
+  if (!spkOn && currentAudio) { currentAudio.pause(); setWave(false); }
+}
+
+function toggleMic() {
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { document.getElementById('mic-hint').textContent = 'Voice not supported — use buttons'; return; }
+  if (isListening) {
+    recognition.stop(); isListening = false;
+    document.getElementById('mic-btn').className = 'ctrl mic-off';
+    document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons';
+    return;
+  }
+  var recognition = new SR();
+  recognition.lang = 'en-GB'; recognition.interimResults = false;
+  recognition.onresult = function(e) {
+    var t = e.results[0][0].transcript.toLowerCase();
+    isListening = false;
+    document.getElementById('mic-btn').className = 'ctrl mic-off';
+    document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons';
+    if (t.indexOf('skip') >= 0 || t.indexOf('no') >= 0) respond('skip');
+    else if (t.indexOf('done') >= 0 || t.indexOf('already') >= 0) respond('done');
+    else respond('yes');
+  };
+  recognition.onerror = function() {
+    isListening = false;
+    document.getElementById('mic-btn').className = 'ctrl mic-off';
+    document.getElementById('mic-hint').textContent = 'Could not hear — try again';
+  };
+  recognition.start();
+  isListening = true;
+  document.getElementById('mic-btn').className = 'ctrl mic-on';
+  document.getElementById('mic-hint').textContent = 'Listening...';
+}
+
+function goList() { if(currentAudio){currentAudio.pause();setWave(false);}window.speechSynthesis.cancel(); show('call-screen','list-screen'); }
+function backToCall() { show('list-screen','call-screen'); }
+function endCall() { if(currentAudio){currentAudio.pause();}window.speechSynthesis.cancel();clearInterval(callTmr);stopRingTone();show('call-screen','list-screen'); }
+function declineCall() { stopRingTone(); show('ring-screen','list-screen'); }
+
+function answerCall() {
+  stopRingTone();
+  // Resume audio context after user gesture
+  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  show('ring-screen','call-screen');
+  callTmr = setInterval(function() {
+    callSecs++;
+    var m = Math.floor(callSecs/60).toString().padStart(2,'0');
+    var s = (callSecs%60).toString().padStart(2,'0');
+    document.getElementById('call-timer').textContent = m+':'+s;
+  }, 1000);
+  setTimeout(function() { showTask(0); }, 800);
+}
+
+function show(from, to) {
+  document.getElementById(from).classList.remove('active');
+  document.getElementById(to).classList.add('active');
+}
+
+// Dates
+var now = new Date();
+var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var timeStr = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
+document.getElementById('scan-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' · '+timeStr;
+document.getElementById('list-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()];
+
+// Scan animation
+var steps = [{d:400,p:25,wa:'7 threads · 1 urgent',wok:true},{d:1000,p:50,em:'12 emails · 2 from clients',eok:true},{d:1600,p:75,sm:'3 messages · none urgent',sok:true},{d:2200,p:100,cal:'2 events · 1 deadline',cok:true}];
+steps.forEach(function(s){setTimeout(function(){
+  document.getElementById('prog').style.width=s.p+'%';
+  if(s.wa)document.getElementById('wa-d').textContent=s.wa;
+  if(s.wok)document.getElementById('wa-ok').classList.add('done');
+  if(s.em)document.getElementById('em-d').textContent=s.em;
+  if(s.eok)document.getElementById('em-ok').classList.add('done');
+  if(s.sm)document.getElementById('sm-d').textContent=s.sm;
+  if(s.sok)document.getElementById('sm-ok').classList.add('done');
+  if(s.cal)document.getElementById('cal-d').textContent=s.cal;
+  if(s.cok)document.getElementById('cal-ok').classList.add('done');
+},s.d);});
+
+// Show ring screen and start ringtone
+setTimeout(function() {
+  createRingtone();
+  show('scan-screen','ring-screen');
+  playRingTone();
+}, 2900);
+</script>
+</body>
+</html>
