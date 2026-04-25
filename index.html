@@ -193,32 +193,25 @@ var tasks = [
   {speak:"That is your briefing for today. Henderson contract, court filing, and Mrs Okafor. I will monitor your communications and alert you if anything urgent comes through. Have a productive morning Maria.", isOutro:true}
 ];
 
+var ringAudio = null;
+
 function createAudioCtx() {
   if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
 function playRing() {
-  if (!audioCtx) return;
-  function oneRing() {
-    [[0,880],[0.15,1109],[0.3,0],[0.6,880],[0.75,1109],[0.9,0]].forEach(function(t) {
-      if (!t[1]) return;
-      var o = audioCtx.createOscillator();
-      var g = audioCtx.createGain();
-      o.connect(g); g.connect(audioCtx.destination);
-      o.type = 'sine'; o.frequency.value = t[1];
-      g.gain.setValueAtTime(0, audioCtx.currentTime + t[0]);
-      g.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + t[0] + 0.05);
-      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + t[0] + 0.13);
-      o.start(audioCtx.currentTime + t[0]);
-      o.stop(audioCtx.currentTime + t[0] + 0.15);
-    });
-  }
-  oneRing();
-  ringInterval = setInterval(oneRing, 2500);
+  stopRing();
+  ringAudio = new Audio('https://www.soundjay.com/phone/sounds/telephone-ring-01a.mp3');
+  ringAudio.loop = true;
+  ringAudio.volume = 0.8;
+  ringAudio.play().catch(function(e){ console.log('Ring audio blocked:', e); });
 }
 
-function stopRing() { if (ringInterval) { clearInterval(ringInterval); ringInterval = null; } }
+function stopRing() {
+  if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
+  if (ringAudio) { ringAudio.pause(); ringAudio.currentTime = 0; ringAudio = null; }
+}
 
 function setWave(on) {
   document.querySelectorAll('.wave-bar').forEach(function(b) {
@@ -386,7 +379,7 @@ steps.forEach(function(s){setTimeout(function(){
 },s.d);});
 
 // Show ring screen — user tap on scan starts audio context
-document.getElementById('scan-screen').addEventListener('click', function() { createAudioCtx(); }, {once: true});
+document.getElementById('scan-screen').addEventListener('click', function() { createAudioCtx(); startRingOnTouch = true; }, {once: true});
 setTimeout(function() { createAudioCtx(); show('scan-screen','ring-screen'); playRing(); }, 2900);
 </script>
 </body>
