@@ -10,7 +10,6 @@
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:420px;margin:0 auto;overflow-x:hidden;}
 .screen{display:none;min-height:100vh;flex-direction:column;}
 .screen.active{display:flex;}
-
 #scan-screen{padding:2rem 1.5rem;}
 .user-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px;color:white;flex-shrink:0;}
 .scan-header{display:flex;align-items:center;gap:12px;margin-bottom:2rem;}
@@ -25,7 +24,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .scan-detail{font-size:12px;color:var(--text3);margin-top:2px;}
 .scan-check{font-size:16px;color:var(--green);opacity:0;transition:opacity 0.4s;}
 .scan-check.done{opacity:1;}
-
 #ring-screen{background:linear-gradient(180deg,#0d1b35 0%,#0f0f1a 100%);align-items:center;justify-content:space-between;padding:3rem 2rem;}
 .ring-label{font-size:13px;color:var(--text3);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:0.5rem;text-align:center;}
 .ring-name{font-size:28px;font-weight:600;text-align:center;margin-bottom:0.25rem;}
@@ -40,7 +38,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ring-btn.answer{background:var(--green);animation:apulse 1.5s ease-in-out infinite;}
 @keyframes apulse{0%,100%{box-shadow:0 0 0 0 rgba(46,204,113,0.4);}50%{box-shadow:0 0 0 14px rgba(46,204,113,0);}}
 .ring-btn-label{font-size:12px;color:var(--text2);text-align:center;margin-top:8px;}
-
 #call-screen{background:linear-gradient(180deg,#0d1b35 0%,#0f0f1a 100%);align-items:center;padding:1.5rem;flex:1;}
 .call-timer{font-size:13px;color:var(--text3);margin-bottom:0.2rem;}
 .call-name{font-size:22px;font-weight:600;margin-bottom:0.1rem;}
@@ -72,7 +69,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .ctrl.end{background:var(--red);}
 .mic-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:0.5rem;}
 .status-txt{font-size:12px;color:var(--text3);text-align:center;margin-bottom:0.5rem;min-height:16px;}
-
 #list-screen{background:var(--bg);flex:1;}
 .list-top{background:var(--bg2);padding:1.25rem 1.5rem;border-bottom:0.5px solid var(--border);}
 .back-row{display:flex;align-items:center;gap:8px;cursor:pointer;margin-bottom:0.75rem;}
@@ -93,7 +89,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </style>
 </head>
 <body>
-
 <div id="scan-screen" class="screen active">
   <div class="scan-header">
     <div class="user-avatar">ML</div>
@@ -121,7 +116,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
          onerror="this.style.display='none';document.getElementById('ring-fallback').style.display='flex';" alt="Alexandra">
     <div id="ring-fallback" style="display:none;width:140px;height:140px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);align-items:center;justify-content:center;font-size:48px;position:relative;z-index:1;">👩‍💼</div>
   </div>
-  <div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:2rem;" id="ring-status">Ringing...</div>
+  <div style="font-size:13px;color:var(--text2);text-align:center;margin-bottom:2rem;">Alexandra · Personal Assistant</div>
   <div class="ring-controls">
     <div style="text-align:center;">
       <button class="ring-btn decline" onclick="declineCall()">📵</button>
@@ -146,13 +141,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div id="call-fallback" style="display:none;width:150px;height:150px;border-radius:50%;background:linear-gradient(135deg,#2d4a6b,#4a90d9);align-items:center;justify-content:center;font-size:56px;">👩‍💼</div>
     </div>
   </div>
-  <div class="wave-bars">
-    <div class="wave-bar" id="wb1"></div>
-    <div class="wave-bar" id="wb2"></div>
-    <div class="wave-bar" id="wb3"></div>
-    <div class="wave-bar" id="wb4"></div>
-    <div class="wave-bar" id="wb5"></div>
-  </div>
+  <div class="wave-bars"><div class="wave-bar" id="wb1"></div><div class="wave-bar" id="wb2"></div><div class="wave-bar" id="wb3"></div><div class="wave-bar" id="wb4"></div><div class="wave-bar" id="wb5"></div></div>
   <div class="status-txt" id="status-txt"></div>
   <div class="speech-box" id="speech-box">Alexandra is ready...</div>
   <div class="resp-row" id="resp-row" style="display:none;">
@@ -185,7 +174,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <script>
-var VOICE_ID = 'uhYnkYTBc711oAY590Ea';
+var API_KEY = 'sk_ade9bf17b7d4d1dde09b5b2ef891ee63dbe52ddb4ad5cee7';
+var VOICE_ID = '6fZce9LFNG3iEITDfqZZ';
 var spkOn = true;
 var isListening = false;
 var callSecs = 0;
@@ -203,81 +193,76 @@ var tasks = [
   {speak:"That is your briefing for today. Henderson contract, court filing, and Mrs Okafor. I will monitor your communications and alert you if anything urgent comes through. Have a productive morning Maria.", isOutro:true}
 ];
 
-// Create ringtone using Web Audio API
-function createRingtone() {
-  try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    return true;
-  } catch(e) { return false; }
+function createAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
 }
 
-function playRingTone() {
+function playRing() {
   if (!audioCtx) return;
-  function ring() {
-    if (!audioCtx) return;
-    var times = [[0, 440], [0.2, 550], [0.4, 0], [0.7, 440], [0.9, 550], [1.1, 0]];
-    times.forEach(function(t) {
-      if (t[1] === 0) return;
-      var osc = audioCtx.createOscillator();
-      var gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.value = t[1];
-      osc.type = 'sine';
-      gain.gain.setValueAtTime(0, audioCtx.currentTime + t[0]);
-      gain.gain.linearRampToValueAtTime(0.3, audioCtx.currentTime + t[0] + 0.05);
-      gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + t[0] + 0.18);
-      osc.start(audioCtx.currentTime + t[0]);
-      osc.stop(audioCtx.currentTime + t[0] + 0.2);
+  function oneRing() {
+    [[0,880],[0.15,1109],[0.3,0],[0.6,880],[0.75,1109],[0.9,0]].forEach(function(t) {
+      if (!t[1]) return;
+      var o = audioCtx.createOscillator();
+      var g = audioCtx.createGain();
+      o.connect(g); g.connect(audioCtx.destination);
+      o.type = 'sine'; o.frequency.value = t[1];
+      g.gain.setValueAtTime(0, audioCtx.currentTime + t[0]);
+      g.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + t[0] + 0.05);
+      g.gain.linearRampToValueAtTime(0, audioCtx.currentTime + t[0] + 0.13);
+      o.start(audioCtx.currentTime + t[0]);
+      o.stop(audioCtx.currentTime + t[0] + 0.15);
     });
   }
-  ring();
-  ringInterval = setInterval(ring, 2500);
+  oneRing();
+  ringInterval = setInterval(oneRing, 2500);
 }
 
-function stopRingTone() {
-  if (ringInterval) { clearInterval(ringInterval); ringInterval = null; }
-}
+function stopRing() { if (ringInterval) { clearInterval(ringInterval); ringInterval = null; } }
 
 function setWave(on) {
-  var bars = document.querySelectorAll('.wave-bar');
-  bars.forEach(function(b) { if(on) b.classList.add('active'); else { b.classList.remove('active'); b.style.height='4px'; } });
-  var ring = document.getElementById('talk-ring');
-  if (ring) { if(on) ring.classList.add('talking'); else ring.classList.remove('talking'); }
+  document.querySelectorAll('.wave-bar').forEach(function(b) {
+    if (on) b.classList.add('active'); else { b.classList.remove('active'); }
+  });
+  var r = document.getElementById('talk-ring');
+  if (r) { if(on) r.classList.add('talking'); else r.classList.remove('talking'); }
 }
 
-function setStatus(txt) {
-  document.getElementById('status-txt').textContent = txt;
-}
+function setStatus(t) { document.getElementById('status-txt').textContent = t; }
 
 async function speakText(text, onEnd) {
-  if (!spkOn) { if(onEnd) setTimeout(onEnd, 500); return; }
+  if (!spkOn) { if(onEnd) setTimeout(onEnd, 300); return; }
   setWave(true);
   setStatus('Alexandra is speaking...');
   try {
-    var resp = await fetch('/.netlify/functions/speak', {
+    // Call ElevenLabs directly from browser
+    var resp = await fetch('https://api.elevenlabs.io/v1/text-to-speech/' + VOICE_ID, {
       method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({text: text})
+      headers: {
+        'xi-api-key': API_KEY,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg'
+      },
+      body: JSON.stringify({
+        text: text,
+        model_id: 'eleven_turbo_v2',
+        voice_settings: {stability:0.5, similarity_boost:0.85, style:0.3, use_speaker_boost:true}
+      })
     });
-    if (!resp.ok) throw new Error('Function returned ' + resp.status);
+    if (!resp.ok) {
+      var err = await resp.text();
+      console.error('ElevenLabs error:', resp.status, err);
+      throw new Error(err);
+    }
     var blob = await resp.blob();
     var url = URL.createObjectURL(blob);
     if (currentAudio) { currentAudio.pause(); currentAudio = null; }
     currentAudio = new Audio(url);
-    currentAudio.onended = function() {
-      setWave(false); setStatus('');
-      URL.revokeObjectURL(url);
-      if (onEnd) setTimeout(onEnd, 400);
-    };
-    currentAudio.onerror = function() {
-      setWave(false); setStatus('');
-      console.error('Audio playback error');
-      useFallback(text, onEnd);
-    };
+    currentAudio.onended = function() { setWave(false); setStatus(''); URL.revokeObjectURL(url); if(onEnd) setTimeout(onEnd, 400); };
+    currentAudio.onerror = function(e) { console.error('Audio error:', e); setWave(false); setStatus(''); useFallback(text, onEnd); };
     await currentAudio.play();
   } catch(e) {
-    console.error('ElevenLabs error:', e);
+    console.error('speak error:', e);
     setWave(false);
     useFallback(text, onEnd);
   }
@@ -289,12 +274,15 @@ function useFallback(text, onEnd) {
   var synth = window.speechSynthesis;
   synth.cancel();
   var u = new SpeechSynthesisUtterance(text);
-  u.rate = 0.88; u.pitch = 1.1; u.volume = 1;
+  u.rate = 0.88; u.pitch = 1.15; u.volume = 1;
+  // Try to get best female British voice
   var voices = synth.getVoices();
-  var v = voices.find(function(v) { return v.lang === 'en-GB' && v.name.toLowerCase().indexOf('female') >= 0; })
+  var v = voices.find(function(v) { return v.name === 'Google UK English Female'; })
+       || voices.find(function(v) { return v.lang === 'en-GB' && v.name.toLowerCase().indexOf('female') >= 0; })
        || voices.find(function(v) { return v.lang === 'en-GB'; })
-       || voices.find(function(v) { return v.lang.startsWith('en'); });
-  if (v) u.voice = v;
+       || voices.find(function(v) { return v.name.indexOf('Samantha') >= 0; })
+       || voices.find(function(v) { return v.lang.startsWith('en') && v.name.toLowerCase().indexOf('female') >= 0; });
+  if (v) { u.voice = v; console.log('Using voice:', v.name); }
   u.onend = function() { setWave(false); setStatus(''); if(onEnd) setTimeout(onEnd, 400); };
   u.onerror = function() { setWave(false); setStatus(''); if(onEnd) setTimeout(onEnd, 400); };
   synth.speak(u);
@@ -339,52 +327,33 @@ function respond(type) {
   }
 }
 
-function toggleSpk() {
-  spkOn = !spkOn;
-  document.getElementById('spk-btn').textContent = spkOn ? '🔊' : '🔇';
-  if (!spkOn && currentAudio) { currentAudio.pause(); setWave(false); }
-}
+function toggleSpk() { spkOn = !spkOn; document.getElementById('spk-btn').textContent = spkOn ? '🔊' : '🔇'; if (!spkOn && currentAudio) { currentAudio.pause(); setWave(false); } }
 
 function toggleMic() {
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) { document.getElementById('mic-hint').textContent = 'Voice not supported — use buttons'; return; }
-  if (isListening) {
-    recognition.stop(); isListening = false;
-    document.getElementById('mic-btn').className = 'ctrl mic-off';
-    document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons';
-    return;
-  }
+  if (isListening) { recognition.stop(); isListening = false; document.getElementById('mic-btn').className = 'ctrl mic-off'; document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons'; return; }
   var recognition = new SR();
   recognition.lang = 'en-GB'; recognition.interimResults = false;
   recognition.onresult = function(e) {
     var t = e.results[0][0].transcript.toLowerCase();
-    isListening = false;
-    document.getElementById('mic-btn').className = 'ctrl mic-off';
-    document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons';
+    isListening = false; document.getElementById('mic-btn').className = 'ctrl mic-off'; document.getElementById('mic-hint').textContent = 'Tap mic to speak · or use buttons';
     if (t.indexOf('skip') >= 0 || t.indexOf('no') >= 0) respond('skip');
     else if (t.indexOf('done') >= 0 || t.indexOf('already') >= 0) respond('done');
     else respond('yes');
   };
-  recognition.onerror = function() {
-    isListening = false;
-    document.getElementById('mic-btn').className = 'ctrl mic-off';
-    document.getElementById('mic-hint').textContent = 'Could not hear — try again';
-  };
-  recognition.start();
-  isListening = true;
-  document.getElementById('mic-btn').className = 'ctrl mic-on';
-  document.getElementById('mic-hint').textContent = 'Listening...';
+  recognition.onerror = function() { isListening = false; document.getElementById('mic-btn').className = 'ctrl mic-off'; };
+  recognition.start(); isListening = true; document.getElementById('mic-btn').className = 'ctrl mic-on'; document.getElementById('mic-hint').textContent = 'Listening...';
 }
 
-function goList() { if(currentAudio){currentAudio.pause();setWave(false);}window.speechSynthesis.cancel(); show('call-screen','list-screen'); }
+function goList() { if(currentAudio){currentAudio.pause();setWave(false);}window.speechSynthesis.cancel();show('call-screen','list-screen'); }
 function backToCall() { show('list-screen','call-screen'); }
-function endCall() { if(currentAudio){currentAudio.pause();}window.speechSynthesis.cancel();clearInterval(callTmr);stopRingTone();show('call-screen','list-screen'); }
-function declineCall() { stopRingTone(); show('ring-screen','list-screen'); }
+function endCall() { if(currentAudio){currentAudio.pause();}window.speechSynthesis.cancel();clearInterval(callTmr);stopRing();show('call-screen','list-screen'); }
+function declineCall() { stopRing(); show('ring-screen','list-screen'); }
 
 function answerCall() {
-  stopRingTone();
-  // Resume audio context after user gesture
-  if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  stopRing();
+  createAudioCtx();
   show('ring-screen','call-screen');
   callTmr = setInterval(function() {
     callSecs++;
@@ -395,21 +364,15 @@ function answerCall() {
   setTimeout(function() { showTask(0); }, 800);
 }
 
-function show(from, to) {
-  document.getElementById(from).classList.remove('active');
-  document.getElementById(to).classList.add('active');
-}
+function show(from, to) { document.getElementById(from).classList.remove('active'); document.getElementById(to).classList.add('active'); }
 
-// Dates
 var now = new Date();
 var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 var months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-var timeStr = now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
-document.getElementById('scan-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' · '+timeStr;
+document.getElementById('scan-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' · '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
 document.getElementById('list-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()];
 
-// Scan animation
-var steps = [{d:400,p:25,wa:'7 threads · 1 urgent',wok:true},{d:1000,p:50,em:'12 emails · 2 from clients',eok:true},{d:1600,p:75,sm:'3 messages · none urgent',sok:true},{d:2200,p:100,cal:'2 events · 1 deadline',cok:true}];
+var steps=[{d:400,p:25,wa:'7 threads · 1 urgent',wok:true},{d:1000,p:50,em:'12 emails · 2 from clients',eok:true},{d:1600,p:75,sm:'3 messages · none urgent',sok:true},{d:2200,p:100,cal:'2 events · 1 deadline',cok:true}];
 steps.forEach(function(s){setTimeout(function(){
   document.getElementById('prog').style.width=s.p+'%';
   if(s.wa)document.getElementById('wa-d').textContent=s.wa;
@@ -422,12 +385,9 @@ steps.forEach(function(s){setTimeout(function(){
   if(s.cok)document.getElementById('cal-ok').classList.add('done');
 },s.d);});
 
-// Show ring screen and start ringtone
-setTimeout(function() {
-  createRingtone();
-  show('scan-screen','ring-screen');
-  playRingTone();
-}, 2900);
+// Show ring screen — user tap on scan starts audio context
+document.getElementById('scan-screen').addEventListener('click', function() { createAudioCtx(); }, {once: true});
+setTimeout(function() { createAudioCtx(); show('scan-screen','ring-screen'); playRing(); }, 2900);
 </script>
 </body>
 </html>
