@@ -94,12 +94,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="user-avatar">ML</div>
     <div><div class="scan-greeting">Good morning, Maria</div><div class="scan-sub" id="scan-date"></div></div>
   </div>
+  <div id="tap-to-begin" onclick="beginScan()" style="text-align:center;margin-bottom:1.5rem;padding:16px;background:rgba(74,144,217,0.15);border:1px solid rgba(74,144,217,0.4);border-radius:14px;cursor:pointer;">
+    <div style="font-size:18px;margin-bottom:4px;">📞</div>
+    <div style="font-size:15px;font-weight:600;color:#4a90d9;">Tap to begin</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;">Alexandra will call you shortly</div>
+  </div>
+  <div id="scan-running" style="display:none;">
   <div class="scan-status">Alexandra is reviewing your communications...</div>
   <div class="progress-wrap"><div class="progress-bar" id="prog"></div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(37,211,102,0.15);">📱</div><div style="flex:1;"><div class="scan-name">WhatsApp Business</div><div class="scan-detail" id="wa-d">Scanning threads...</div></div><div class="scan-check" id="wa-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(74,144,217,0.15);">✉️</div><div style="flex:1;"><div class="scan-name">Email</div><div class="scan-detail" id="em-d">Waiting...</div></div><div class="scan-check" id="em-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(147,51,234,0.15);">💬</div><div style="flex:1;"><div class="scan-name">SMS</div><div class="scan-detail" id="sm-d">Waiting...</div></div><div class="scan-check" id="sm-ok">✓</div></div>
   <div class="scan-item"><div class="scan-ico" style="background:rgba(243,156,18,0.15);">📅</div><div style="flex:1;"><div class="scan-name">Calendar</div><div class="scan-detail" id="cal-d">Waiting...</div></div><div class="scan-check" id="cal-ok">✓</div></div>
+  </div>
 </div>
 
 <div id="ring-screen" class="screen">
@@ -366,18 +373,7 @@ var months = ['January','February','March','April','May','June','July','August',
 document.getElementById('scan-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()]+' · '+now.getHours().toString().padStart(2,'0')+':'+now.getMinutes().toString().padStart(2,'0');
 document.getElementById('list-date').textContent = days[now.getDay()]+', '+now.getDate()+' '+months[now.getMonth()];
 
-var steps=[{d:400,p:25,wa:'7 threads · 1 urgent',wok:true},{d:1000,p:50,em:'12 emails · 2 from clients',eok:true},{d:1600,p:75,sm:'3 messages · none urgent',sok:true},{d:2200,p:100,cal:'2 events · 1 deadline',cok:true}];
-steps.forEach(function(s){setTimeout(function(){
-  document.getElementById('prog').style.width=s.p+'%';
-  if(s.wa)document.getElementById('wa-d').textContent=s.wa;
-  if(s.wok)document.getElementById('wa-ok').classList.add('done');
-  if(s.em)document.getElementById('em-d').textContent=s.em;
-  if(s.eok)document.getElementById('em-ok').classList.add('done');
-  if(s.sm)document.getElementById('sm-d').textContent=s.sm;
-  if(s.sok)document.getElementById('sm-ok').classList.add('done');
-  if(s.cal)document.getElementById('cal-d').textContent=s.cal;
-  if(s.cok)document.getElementById('cal-ok').classList.add('done');
-},s.d);});
+// Scan runs after user taps "Tap to begin"
 
 // Show ring screen — user tap on scan starts audio context
 document.getElementById('scan-screen').addEventListener('click', function() { createAudioCtx(); startRingOnTouch = true; }, {once: true});
